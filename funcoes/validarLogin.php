@@ -24,13 +24,13 @@ $_SESSION["LOGADO"] = "false";
 $_SESSION["email"] = $email;
 
 
-if($email == "admin@gmail.com" && $pass = "admin123")
+if($email == "admin@gmail.com" and $pass == "admin123")
 {
     header('location:../dashboard.php');
     $_SESSION["TIPO_CONTA"] = "admin";
     $_SESSION["LOGADO"] = "true";
 }
-else if($email == "utilizador@gmail.com" && $pass = "utilizador123")
+else if($email == "utilizador@gmail.com" and $pass == "utilizador123")
 {
     header('location:../index.php');
     $_SESSION["TIPO_CONTA"] = "utilizador";

@@ -60,7 +60,7 @@ if($_SESSION["LOGADO"] == true)
                         {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
                             echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="#" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
                             <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
                             </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
@@ -72,8 +72,8 @@ if($_SESSION["LOGADO"] == true)
                         else
                         {
                             echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="#" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
                             </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {

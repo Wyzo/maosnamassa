@@ -95,7 +95,7 @@ $_SESSION["PAGO"] = false;
 </style>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
             <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -109,7 +109,7 @@ $_SESSION["PAGO"] = false;
             </div>
         </div>
     </nav>
-<nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
+    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
         <div class="container">
             <a href="index.php" class="navbar-brand">
                 <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2"
@@ -132,7 +132,7 @@ $_SESSION["PAGO"] = false;
                         {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
                             echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="#" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
                             <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
                             </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
@@ -144,8 +144,8 @@ $_SESSION["PAGO"] = false;
                         else
                         {
                             echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="#" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
                             </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {
@@ -178,11 +178,12 @@ $_SESSION["PAGO"] = false;
                 111111);
             </script>
         </div>
+        <div class="container text-center">
+            <a href="index.php" class="bg-danger text-white text-decoration-none p-2"
+                style="border-radius: 5px;">Voltar</a>
+        </div>
     </div>
 
-    <div class="container">
-        <a href="index.php">Voltar</a>
-    </div>
 
     <div class="a" style="background-color: #910037; color: #FFFFFF">
         <div class="container">
