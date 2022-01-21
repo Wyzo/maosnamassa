@@ -104,7 +104,7 @@ session_start();
                 <div class="esquerda d-inline-block mx-5">
                     <i class="fas fa-birthday-cake fa-6x" style="color:rgb(255, 0, 98)"></i>
                 </div>
-                <div class="direita d-inline-block text-start">
+                <div class="direita d-inline-block text-start" style="width: 300px">
                     <h2 class="fs-3 fw-bold text-black">Bolos</h2>
                     <p class="fw-light">Criamos bolos personalizados ao gosto do cliente.</p>
                 </div>
@@ -113,7 +113,7 @@ session_start();
                 <div class="esquerda d-inline-block mx-5">
                     <i class="fas fa-cookie-bite fa-6x" style="color:rgb(255, 0, 98)"></i>
                 </div>
-                <div class="direita d-inline-block text-start">
+                <div class="direita d-inline-block text-start" style="width: 300px">
                     <h2 class="fs-3 fw-bold text-black">Pastelaria</h2>
                     <p class="fw-light">Possuímos uma grande variedade de produtos de pastelaria.</p>
                 </div>

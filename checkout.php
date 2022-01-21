@@ -218,23 +218,6 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
                     <div class="row gy-3 mb-5" id="cartaoCredito">
                         <form action="./funcoes/validarCheckout.php?metodo=cartao" method="post">
                             <?php
-
-                            if($_GET['err'] == 1)
-                            {
-                                echo '<div class="alert alert-danger text-center"><?php echo "Imagem já existe"; ?>
-                                </div>';
-                            }
-                            else if($_GET['err'] == 2)
-                            {
-                                echo '<div class="alert alert-danger text-center"><?php echo "Imagem muito grande"; ?>
-                                </div>';
-                            }
-                            else if($_GET['err'] == 3)
-                            {
-                                echo '<div class="alert alert-danger text-center"><?php echo "Ficheiro não suportado"; ?>
-                                </div>';
-                            }
-
                             if (isset($_GET['err'])) {
                             ?>
                                 <div class="alert alert-danger text-center"><?php echo "Erro ao confirmar pagamento"; ?>
