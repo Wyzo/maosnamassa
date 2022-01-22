@@ -11,12 +11,9 @@ if ($logado != 'true' && $tipoCONTA != 'admin') {
 if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utilizador') {
     header('Location: index.php');
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,7 +24,6 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title> Mãos na massa - Encomendar</title>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
@@ -84,13 +80,11 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
             </div>
         </div>
     </nav>
-
     <div class="a text-center mb-4" style="background-image: url('./imagens/aleatorias/a.jpg'); height: 300px;">
         <div class="container text-center" style="width: 700px; padding-top: 90px;"></div>
         <h2 class="fw-bold text-white" style="font-size: 70px;">Dashboard</h2>
         <p class="fw-light text-white fs-2">Área do admin</p>
     </div>
-
     <div class="container">
         <?php
         if (isset($_GET['err'])) {
@@ -108,7 +102,6 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
             <input style="width: 150px;" class="form-control my-1" type="submit" value="Carregar imagem" name="submit">
         </form>
     </div>
-
     <div class="container mt-3">
         <h2>Encomendas</h2>
         <p>Dados disponíveis</p>
@@ -190,7 +183,6 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
             </tbody>
         </table>
     </div>
-
     <div class="container mt-3">
         <h2>Mensagens de ajuda</h2>
         <p>Dados disponíveis</p>
@@ -229,26 +221,26 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
             </tbody>
         </table>
     </div>
-
-
-    <div class="container p-4">
-        <h2>Resumo</h2>
-        <div class="row row-cols-1 row-cols-lg-3">
-            <div class="row align-items-center mx-2 my-2" style="width: 600px; background-color: #FCFCFC;">
-                <div class="col text-center">
-                    <i class="fas fa-dollar-sign fa-6x" style="color:rgb(255, 0, 98)"></i>
+    <div class="container text-black my-3 fw-bold">
+        <div class="container text-center p-3">
+            <h2>O que podemos fazer por si?</h2>
+        </div>
+        <div class="row text-center">
+            <div class="col mx-2 p-3" style="background-color: #FCFCFC;">
+                <div class="esquerda d-inline-block mx-5">
+                <i class="fas fa-dollar-sign fa-6x" style="color:rgb(255, 0, 98)"></i>
                 </div>
-                <div class="col p-2">
+                <div class="direita d-inline-block text-start" style="width: 300px">
                     <h2 class="fs-3 fw-bold text-black">Vendas</h2>
                     <p>01-12-2021 | 12-01-2022</p>
                     <p class="fw-bold fs-2">10.405€</p>
                 </div>
             </div>
-            <div class="row align-items-center mx-2 my-2" style="width: 600px; background-color: #FCFCFC;">
-                <div class="col text-center">
-                    <i class="fas fa-star fa-6x" style="color:rgb(255, 0, 98)"></i>
+            <div class="col mx-2 p-3" style="background-color: #FCFCFC;">
+                <div class="esquerda d-inline-block mx-5">
+                <i class="fas fa-star fa-6x" style="color:rgb(255, 0, 98)"></i>
                 </div>
-                <div class="col p-2">
+                <div class="direita d-inline-block text-start" style="width: 300px">
                     <h2 class="fs-3 fw-bold text-black">Feedback</h2>
                     <p>01-12-2021 | 12-01-2022</p>
                     <p class="fw-bold fs-2">4.32/5</p>
@@ -256,7 +248,6 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
             </div>
         </div>
     </div>
-
     <div class="container mb-5">
         <div class="container text-end">
             <h2>Vendas</h2>
@@ -341,5 +332,4 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
     </div>
     <script src="https://kit.fontawesome.com/52c6714f28.js" crossorigin="anonymous"></script>
 </body>
-
 </html>

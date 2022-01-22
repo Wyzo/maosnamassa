@@ -152,27 +152,6 @@ if($_SESSION["LOGADO"] == "false")
                     </p>
                     <a class="btn btn-danger" style="border-radius: 0px; width: 200px;" href="">EDITAR</a>
                 </div>
-
-                <div class="container p">
-                    <h1 class="fs-3 fw-light">MORADA DE COBRANÇA POR DEFEITO</h1>
-                    <p>Nome:
-                        <?php
-                        error_reporting(0);
-
-                        $a1 = explode("@", $_SESSION["email"]);
-                        $username = $a1[0];
-                        echo $username;
-                        ?>
-                    </p>
-                    <p>E-mail:
-                        <?php
-                        error_reporting(0);
-
-                        echo $_SESSION["email"];
-                        ?>
-                    </p>
-                    <a class="btn btn-danger" style="border-radius: 0px; width: 200px;" href="">EDITAR</a>
-                </div>
             </div>
         </div>
     </div>
