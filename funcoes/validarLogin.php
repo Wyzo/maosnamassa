@@ -2,7 +2,6 @@
 
 session_start();
 
-
 function verificarEmail($utilizadores){
     $utilizadores = [
         "admin@gmail.com" => "admin123",
@@ -38,4 +37,5 @@ if(verificarEmail($_POST["email"]) == true){
         }
     }
 }
+
 ?>
