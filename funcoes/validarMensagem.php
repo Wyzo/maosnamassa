@@ -7,14 +7,19 @@ $telefone = $_POST["TELEFONE"];
 $nome = $_POST["NOME"];
 $mensagem = $_POST["COMENT"];
 
-if ($email == null || $telefone == null || $nome == null || $mensagem == null || strlen($telefone) != 9)
+function validarMensagem($email, $telefone, $nome, $mensagem)
 {
-    header("Location: ../ajuda.php?err=true");
+    if ($email == null || $telefone == null || $nome == null || $mensagem == null || strlen($telefone) != 9) {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
-else
-{
+if (validarMensagem($email, $telefone, $nome, $mensagem) == false) {
+    header("Location: ../ajuda.php?err=true");
+} else {
     header("Location: ../submit.php");
 }
-
-?>

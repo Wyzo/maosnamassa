@@ -13,7 +13,7 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

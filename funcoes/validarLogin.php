@@ -1,6 +1,13 @@
 <?php
 
 session_start();
+/*
+CONTAS DISPONÍVEIS:
+
+admin -> admin@gmail.com - admin123
+utilizador -> utilizador@gmail.com - utilizador123
+
+*/
 
 function verificarEmail($utilizadores){
     $utilizadores = [
@@ -37,5 +44,4 @@ if(verificarEmail($_POST["email"]) == true){
         }
     }
 }
-
 ?>

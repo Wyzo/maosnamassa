@@ -10,7 +10,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,6 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
     <link rel="icon" href="./imagens/Logotipo.png">
     <title> Mãos na massa - Encomendar</title>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">

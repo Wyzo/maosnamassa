@@ -6,9 +6,45 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
     header("Location: index.php");
 }
 
+
+function validarCampos($numCartao, $dataCartao, $codigoSeguranca, $codpostal, $telefone){
+    $data_agora = date("Y-m-d");
+
+    if (strlen(trim($codigoSeguranca)) != 3
+    or strlen(trim($numCartao)) != 16
+    or $dataCartao < $data_agora 
+    or strlen(trim($telefone)) != 9 
+    or preg_match('/^\d{4}(-\d{3})?$/', $codpostal) != 1) {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $nomeCartao = $_POST["nomeCartao"];
+    $numCartao = $_POST["numCartao"];
+    $dataCartao = $_POST["dataCartao"];
+    $codigoSeguranca = $_POST["codigoSeguranca"];
+    $codpostal = $_POST["codigoPostal"];
+    $data_agora = date("Y-m-d");
+    $telefone = $_POST["telefone"];
+
+    if (validarCampos($numCartao, $dataCartao, $codigoSeguranca, $codpostal, $telefone) == true) {
+        unset($_SESSION["PAGO"]);
+        $_SESSION["PAGO"] = true;
+        unset($_SESSION["ENCOMENDA_ATIVA"]);
+        $_SESSION["ENCOMENDA_ATIVA"] = false;
+        header('location: encomendavalida.php');
+    }
+}
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,14 +56,6 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
     <script src="js/jquery.min.js"></script>
     <title>Mãos na Massa - Checkout</title>
 </head>
-
-<style>
-    #paypala,
-    #mbwaya {
-        visibility: hidden;
-    }
-</style>
-
 <script>
     function validarNumero(event) {
         var char = String.fromCharCode(event.which);
@@ -216,7 +244,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
                 <div class="col-md-7 col-lg-8">
                     <h4 class="mb-3">Informações de envio</h4>
                     <div class="row gy-3 mb-5" id="cartaoCredito">
-                        <form action="./funcoes/validarCheckout.php" method="post">
+                        <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post">
                             <?php
                             if (isset($_GET['err'])) {
                             ?>
@@ -230,12 +258,12 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
 
                                     <div class="col-12">
                                         <label for="Telemovel" class="form-label">Telefone</label>
-                                        <input type="phone" name="telefone" class="form-control" id="telefone" placeholder="961442999" onkeypress="validarNumero(event);" maxlength="9" required>
+                                        <input type="phone" name="telefone" class="form-control" id="telefone" placeholder="961442999" onkeypress="validarNumero(event);" maxlength="9" value="<?php echo $_POST["telefone"]; ?>" required>
                                     </div>
 
                                     <div class="col-12">
                                         <label for="morada" class="form-label">Morada</label>
-                                        <input type="text" class="form-control" id="morada" placeholder="Rua da tamancaria pascoal" required="" required>
+                                        <input type="text" class="form-control" name="morada" id="morada" placeholder="Rua da tamancaria pascoal" value="<?php echo $_POST["morada"]; ?>" required>
                                         <div class="invalid-feedback">
                                             Por-favor utilize uma morada valida.
                                         </div>
@@ -243,7 +271,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
 
                                     <div class="col-12">
                                         <label for="address2" class="form-label">Codigo Postal</label>
-                                        <input type="text" name="codigoPostal" class="form-control" id="address2" placeholder="3515-079" required>
+                                        <input type="text" name="codigoPostal" class="form-control" id="address2" placeholder="3515-079" value="<?php echo $_POST["codigoPostal"]; ?>" required>
                                     </div>
                                 </div>
                                 <hr class="my-4">
@@ -252,23 +280,23 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
                             </div>
                             <div class="col-md-6">
                                 <label for="cc-name" class="form-label">Nome do cartão</label>
-                                <input name="nomeCartao" type="text" class="form-control" id="cc-name" placeholder="" required>
+                                <input name="nomeCartao" type="text" class="form-control" id="cc-name" placeholder="" value="<?php echo $_POST["nomeCartao"]; ?>" required>
                                 <small class="text-muted">Nome completo conforme exibido no cartão</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="cc-number" class="form-label">Número do cartão</label>
-                                <input name="numCartao" type="text" class="form-control" id="cc-number" placeholder="" onkeypress="validarNumero(event);" maxlength="16" required>
+                                <input name="numCartao" type="text" class="form-control" id="cc-number" placeholder="" onkeypress="validarNumero(event);" maxlength="16" value="<?php echo $_POST["numCartao"]; ?>" required>
                             </div>
 
                             <div class="col-md-3">
                                 <label for="cc-expiration" class="form-label">Expiração</label>
-                                <input name="dataCartao" type="date" class="form-control" id="cc-expiration" placeholder="teste" required>
+                                <input name="dataCartao" type="date" class="form-control" id="cc-expiration" placeholder="teste" value="<?php echo $_POST["dataCartao"]; ?>" required>
                             </div>
 
                             <div class="col-md-3">
                                 <label for="cc-cvv" class="form-label">CVV</label>
-                                <input name="codigoSeguranca" type="text" class="form-control" id="cc-cvv" placeholder="" onkeypress="validarNumero(event);" maxlength="3" required>
+                                <input name="codigoSeguranca" type="text" class="form-control" id="cc-cvv" placeholder="" onkeypress="validarNumero(event);" maxlength="3" value="<?php echo $_POST["codigoSeguranca"]; ?>" required>
                             </div>
                             <button type="submit" class="btn btn-success">Pagar</button>
                         </form>
