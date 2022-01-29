@@ -10,7 +10,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
 
 ?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,22 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
     <link rel="icon" href="./imagens/Logotipo.png">
     <title> Mãos na massa - Encomendar</title>
 </head>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #c92b4d;
+        }
+</style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
@@ -33,7 +49,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
+    <nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
         <div class="container">
             <a href="index.php" class="navbar-brand">
                 <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2" style="width: 100px;">
@@ -43,6 +59,7 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
             <div id="navbarSupportedContent" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto align-middle">
                     <li class="nav-item"><a href="galeria.php" class="nav-link text-danger">Galeria</a></li>
+                    <li class="nav-item"><a href="pastelaria.php" class="nav-link text-danger">Pastelaria</a></li>
                     <?php
                     error_reporting(0);
 
@@ -50,30 +67,32 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
                         echo '<li class="nav-item"><a href="encomendar.php" class="nav-link text-danger mr-5">Encomendar</a></li>';
                         if ($_SESSION["TIPO_CONTA"] == "admin") {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                               </body>';
                             }
                         } else {
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                                 </body>';
                             }
                         }
-                        echo '<li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>';
                     } else {
                         echo '<li class="nav-item"><a href="login.php" class="nav-link text-danger">Entrar/Registrar</a></li>';
                     }
                     ?>
                 </ul>
+            </div>
+            <div class="containe text-end">
+                <?php
+                if ($_SESSION["LOGADO"] == "true") {
+                    echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
+                    <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                    <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>
+                    </ul>';
+                }
+                ?>
             </div>
         </div>
     </nav>
@@ -82,41 +101,42 @@ if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
         <h2 class="fw-bold text-white" style="font-size: 70px;">Encomendar</h2>
         <p class="fw-light text-white fs-2">Idealize o seu bolo</p>
     </div>
-    <div class="container mb-5">
+    <div class="container">
         <form method="post" action="./funcoes/validarEncomenda.php">
             <fieldset>
                 <h2>Vamos começar!</h2>
                 <p>Preencha os campos abaixo..</p>
-                <div class="row">
-                    <div class="col">
-                        <p>Tipo de bolo</p>
-                        <select name="TIPO_BOLO" class="col-sm-3 mb-3 text-black form-select">
-                            <option value="1">Bolo de Aniversário</option>
-                            <option value="2">Primeira comunhão</option>
-                            <option value="3">Casamento</option>
-                        </select>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <p>Tipo de bolo</p>
+                            <select name="TIPO_BOLO" class="col-sm-3 mb-3 text-black form-select">
+                                <option value="1">Bolo de Aniversário</option>
+                                <option value="2">Primeira comunhão</option>
+                                <option value="3">Casamento</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <p>Tipo de massa</p>
+                            <select name="TIPO_MASSA" class="col-sm-3 mb-3 text-black form-select">
+                                <option value="1">Pão de ló</option>
+                                <option value="2">Caramelo</option>
+                                <option value="3">Cenoura</option>
+                                <option value="4">Chocolate</option>
+                                <option value="5">Iogurte</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <p>Tipo de recheio</p>
+                            <select name="TIPO_RECHEIO" class="col-sm-3 mb-3 text-black form-select">
+                                <option value="1">Brigadeiro</option>
+                                <option value="2">Doce d'ovo</option>
+                                <option value="3">Brigadeiro de caramelo</option>
+                                <option value="4">Creme russo</option>
+                                <option value="5">Frutos vermelhos</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col">
-                    <p>Tipo de massa</p>
-                    <select name="TIPO_MASSA" class="col-sm-3 mb-3 text-black form-select">
-                        <option value="1">Pão de ló</option>
-                        <option value="2">Caramelo</option>
-                        <option value="3">Cenoura</option>
-                        <option value="4">Chocolate</option>
-                        <option value="5">Iogurte</option>
-                    </select>
-                    </div>
-                    <div class="col">
-                    <p>Tipo de recheio</p>
-                    <select name="TIPO_RECHEIO" class="col-sm-3 mb-3 text-black form-select">
-                        <option value="1">Brigadeiro</option>
-                        <option value="2">Doce d'ovo</option>
-                        <option value="3">Brigadeiro de caramelo</option>
-                        <option value="4">Creme russo</option>
-                        <option value="5">Frutos vermelhos</option>
-                    </select>
-                    </div>
-                </div>
                     <div>
                         <p>Informações</p>
                         <textarea name="DETALHES" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Escreva aqui informação sobre o peso e a decoração. Preencha com o maior detalhe possível!"></textarea>

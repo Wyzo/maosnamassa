@@ -2,26 +2,96 @@
 
 session_start();
 
+require_once 'funcoes/db.php';
+
 if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
     header("Location: index.php");
 }
 
 
-function validarCampos($numCartao, $dataCartao, $codigoSeguranca, $codpostal, $telefone){
+function validarCampos($numCartao, $dataCartao, $codigoSeguranca, $codpostal, $telefone)
+{
     $data_agora = date("Y-m-d");
 
-    if (strlen(trim($codigoSeguranca)) != 3
-    or strlen(trim($numCartao)) != 16
-    or $dataCartao < $data_agora 
-    or strlen(trim($telefone)) != 9 
-    or preg_match('/^\d{4}(-\d{3})?$/', $codpostal) != 1) {
+    if (
+        strlen(trim($codigoSeguranca)) != 3
+        or strlen(trim($numCartao)) != 16
+        or $dataCartao < $data_agora
+        or strlen(trim($telefone)) != 9
+        or preg_match('/^\d{4}(-\d{3})?$/', $codpostal) != 1
+    ){
         return false;
-    }
-    else
-    {
+    } else {
         return true;
     }
 }
+
+    function validaDadosCartao($codigoSeguranca, $numCartao, $dataCartao, $telefone, $codpostal)
+    {
+        $data_agora = date("Y-m-d");
+        if (strlen(trim($codigoSeguranca)) != 3 or strlen(trim($numCartao)) != 16 or $dataCartao < $data_agora or strlen(trim($telefone)) != 9 or preg_match('/^\d{4}(-\d{3})?$/', $codpostal) != 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function getTipoBolo($tipo_bolo)
+    {
+        switch ($tipo_bolo) {
+            case 1:
+                return "Bolo de aniversário";
+                break;
+            case 2:
+                return "Primeira comunhão";
+                break;
+            case 3:
+                return "Casamento";
+                break;
+        }
+    }
+
+    function getTipoMassa($tipo_massa)
+    {
+        switch ($tipo_massa) {
+            case 1:
+                return "Pão de ló";
+                break;
+            case 2:
+                return "Caramelo";
+                break;
+            case 3:
+                return "Cenoura";
+                break;
+            case 4:
+                return "Chocolate";
+                break;
+            case 5:
+                return "Iogurte";
+                break;
+        }
+    }
+
+    function getTipoRecheio($tipo_recheio)
+    {
+        switch ($tipo_recheio) {
+            case 1:
+                return "Brigadeiro";
+                break;
+            case 2:
+                return "Doce d'ovo";
+                break;
+            case 3:
+                return "Brigadeiro de caramelo";
+                break;
+            case 4:
+                return "Creme russo";
+                break;
+            case 5:
+                return "Frutos vermelhos";
+                break;
+        }
+    }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -33,12 +103,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data_agora = date("Y-m-d");
     $telefone = $_POST["telefone"];
 
-    if (validarCampos($numCartao, $dataCartao, $codigoSeguranca, $codpostal, $telefone) == true) {
-        unset($_SESSION["PAGO"]);
-        $_SESSION["PAGO"] = true;
-        unset($_SESSION["ENCOMENDA_ATIVA"]);
-        $_SESSION["ENCOMENDA_ATIVA"] = false;
-        header('location: encomendavalida.php');
+    $tipo_bolo = $_SESSION["tipoBOLO"];
+    $tipo_massa = $_SESSION["tipoMASSA"];
+    $tipo_recheio = $_SESSION["tipoRECHEIO"];
+    $detalhes = $_SESSION["DETALHES"];
+    $email = $_SESSION["email"];
+
+    if (validaDadosCartao($codigoSeguranca, $numCartao, $dataCartao, $telefone, $codpostal) == true) {
+        $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+
+        $result = $link->query($sql);
+        $row = $result->fetch();
+
+        $id = $row["id"];
+
+        $tipobolo = getTipoBolo($tipo_bolo);
+        $tipomassa = getTipoMassa($tipo_massa);
+        $tiporecheio = getTipoRecheio($tipo_recheio);
+
+        $sql = "INSERT INTO encomendas (detalhes, id_cliente, morada_envio, preco, tipo_bolo, tipo_massa, tipo_recheio)
+        VALUES('$detalhes', '$id', '$morada', '35', '$tipobolo', '$tipomassa', '$tiporecheio')";
+
+        if ($link->exec($sql)) {
+            unset($_SESSION["PAGO"]);
+            $_SESSION["PAGO"] = true;
+            unset($_SESSION["ENCOMENDA_ATIVA"]);
+            $_SESSION["ENCOMENDA_ATIVA"] = false;
+            header('location: encomendavalida.php');
+        }
+    } else {
+        header('location: checkout.php?err=true');
     }
 }
 
@@ -65,11 +159,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 </script>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+            width: 10px;
+        }
 
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #c92b4d;
+        }
+</style>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
-            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
 
             <div id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
@@ -79,47 +190,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
+<nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
         <div class="container">
             <a href="index.php" class="navbar-brand">
-                <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2" style="width: 100px;">
+                <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2"
+                    style="width: 100px;">
             </a>
 
-            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
             <div id="navbarSupportedContent" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto align-middle">
                     <li class="nav-item"><a href="galeria.php" class="nav-link text-danger">Galeria</a></li>
+                    <li class="nav-item"><a href="pastelaria.php" class="nav-link text-danger">Pastelaria</a></li>
                     <?php
                     error_reporting(0);
-
-                    if ($_SESSION["LOGADO"] == "true") {
+        
+                    if($_SESSION["LOGADO"] == "true")
+                    {
                         echo '<li class="nav-item"><a href="encomendar.php" class="nav-link text-danger mr-5">Encomendar</a></li>';
-                        if ($_SESSION["TIPO_CONTA"] == "admin") {
+                        if($_SESSION["TIPO_CONTA"] == "admin")
+                        {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
-                            if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
-                                echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
+                            if($_SESSION["ENCOMENDA_ATIVA"] == true)
+                            {
+                              echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                               </body>';
                             }
-                        } else {
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
-                            if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
+                        }
+                        else
+                        {
+                            if($_SESSION["ENCOMENDA_ATIVA"] == true)
+                            {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                                 </body>';
                             }
                         }
-                        echo '<li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>';
-                    } else {
+                    }
+                    else
+                    {
                         echo '<li class="nav-item"><a href="login.php" class="nav-link text-danger">Entrar/Registrar</a></li>';
                     }
                     ?>
                 </ul>
+            </div>
+            <div class="containe text-end">
+                <?php
+                if ($_SESSION["LOGADO"] == "true") {
+                    echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
+                    <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                    <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>
+                    </ul>';
+                }
+                ?>
             </div>
         </div>
     </nav>
@@ -244,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-md-7 col-lg-8">
                     <h4 class="mb-3">Informações de envio</h4>
                     <div class="row gy-3 mb-5" id="cartaoCredito">
-                        <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post">
+                        <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
                             <?php
                             if (isset($_GET['err'])) {
                             ?>

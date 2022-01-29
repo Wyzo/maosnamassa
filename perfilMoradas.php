@@ -3,10 +3,51 @@
 session_start();
 
 error_reporting(0);
+require_once 'funcoes/db.php';
 
-if($_SESSION["LOGADO"] == "false")
-{
+if ($_SESSION["LOGADO"] == "false") {
     header("Location: index.php");
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (isset($_POST["morada_envio"])) {
+        $morada_envio = $_POST["morada_envio"];
+
+        $emailV = $_SESSION["email"];
+        $sql = "SELECT * FROM utilizadores WHERE email='$emailV'";
+
+        $result = $link->query($sql);
+        $row = $result->fetch();
+        $id = $row["id"];
+
+        unset($sql);
+        $sql = "UPDATE utilizadores SET morada_envio = '$morada_envio' WHERE id = '$id'";
+        if ($link->exec($sql)) {
+            header("Location: perfilMoradas.php?suc=true");
+        } else {
+            header("Location: perfilMoradas.php?err=true");
+        }
+    }else if (isset($_POST["morada_cobranca"])) {
+        $morada_cobranca = $_POST["morada_cobranca"];
+
+        $emailV = $_SESSION["email"];
+        $sql = "SELECT * FROM utilizadores WHERE email='$emailV'";
+
+        $result = $link->query($sql);
+        $row = $result->fetch();
+        $id = $row["id"];
+
+        unset($sql);
+        $sql = "UPDATE utilizadores SET morada_cobranca = '$morada_cobranca' WHERE id = '$id'";
+        if ($link->exec($sql)) {
+            header("Location: perfilMoradas.php?suc=true");
+        } else {
+            header("Location: perfilMoradas.php?err=true");
+        }
+    } else {
+        header("Location: perfilMoradas.php?err=true");
+    }
 }
 
 ?>
@@ -19,11 +60,27 @@ if($_SESSION["LOGADO"] == "false")
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="icon" href="./imagens/aleatorias/logotipo.png">
+    <script src="./js/bootstrap.bundle.min.js"></script>
     <title>Mãos na Massa - Perfil</title>
 </head>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+            width: 10px;
+        }
 
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #c92b4d;
+        }
+</style>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
             <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -37,7 +94,7 @@ if($_SESSION["LOGADO"] == "false")
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
+<nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
         <div class="container">
             <a href="index.php" class="navbar-brand">
                 <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2"
@@ -50,6 +107,7 @@ if($_SESSION["LOGADO"] == "false")
             <div id="navbarSupportedContent" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto align-middle">
                     <li class="nav-item"><a href="galeria.php" class="nav-link text-danger">Galeria</a></li>
+                    <li class="nav-item"><a href="pastelaria.php" class="nav-link text-danger">Pastelaria</a></li>
                     <?php
                     error_reporting(0);
         
@@ -59,10 +117,6 @@ if($_SESSION["LOGADO"] == "false")
                         if($_SESSION["TIPO_CONTA"] == "admin")
                         {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {
                               echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
@@ -71,17 +125,12 @@ if($_SESSION["LOGADO"] == "false")
                         }
                         else
                         {
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                                 </body>';
                             }
                         }
-                        echo '<li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>';
                     }
                     else
                     {
@@ -90,30 +139,50 @@ if($_SESSION["LOGADO"] == "false")
                     ?>
                 </ul>
             </div>
+            <div class="containe text-end">
+                <?php
+                if ($_SESSION["LOGADO"] == "true") {
+                    echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
+                    <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                    <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>
+                    </ul>';
+                }
+                ?>
+            </div>
         </div>
     </nav>
-    <!--
-        DADOS FIXOS
-                -->
+    <?php
+    if (isset($_GET['err'])) {
+    ?>
+    <div class="container p-2">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert"><?php echo "Erro ao atualizar dados"; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+    <?php
+    if (isset($_GET['suc'])) {
+    ?>
+    <div class="container p-2">
+        <div class="alert alert-success alert-dismissible fade show" role="alert"><?php echo "Dados atualizados com sucesso!"; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
     <div class="container my-5 ">
         <div class="row">
             <div class="col-3 text-start">
                 <div class="container">
-                    <?php
+                <?php
                     error_reporting(0);
-        
-                    if($_SESSION["LOGADO"] == "true")
-                    {
-                        if($_SESSION["TIPO_CONTA"] == "admin")
-                        {
-                            
-                            echo '<a href="#" class="nav-link fw-light fs-3 text-black">' . $_SESSION["email"] . '</a>';
 
-                        }
-                        else
-                        {
-                            echo '<a href="#" class="nav-link fw-light fs-3 text-black">' . $_SESSION["email"] . '</a>';
-                        }
+                    if ($_SESSION["LOGADO"] == "true") {
+                        echo '<a href="#" class="nav-link fw-light fs-6 text-black">' . $_SESSION["email"] . '</a>';
                         echo '<a class="text-black" href="./funcoes/logout.php">Logout</a>';
                     }
                     ?>
@@ -123,8 +192,7 @@ if($_SESSION["LOGADO"] == "false")
                             Informações
                         </a>
                         <a href="perfilEncomendas.php" class="list-group-item list-group-item-action">Encomendas</a>
-                        <a href="perfilMoradas.php"
-                            class="list-group-item list-group-item-action bg-danger text-white">Moradas</a>
+                        <a href="perfilMoradas.php" class="list-group-item list-group-item-action bg-danger text-white">Moradas</a>
                     </div>
                     <p class="text-start">Precisas de ajuda? Clica <a href="../ajuda.php" class="text-danger">aqui</a>
                         para acederes à área de suporte ao cliente!</p>
@@ -135,40 +203,85 @@ if($_SESSION["LOGADO"] == "false")
                     <h2 class="fs-3 fw-bold">A minha conta</h2>
                     <hr style="height: 6px; background-color: red; width: 80px; opacity: 100%;">
                     <h1 class="fs-3 fw-light">MORADA DE ENVIO</h1>
-                    <?php
-                        error_reporting(0);
+                    <p>
+                        <?php
 
-                        if($_SESSION["TIPO_CONTA"] == "admin")
-                        {
-                            echo '<p>Quinta da Carreira</p>';
-                            echo '<p>Rua rainha santa isabel LT 52 RCH ESQ</p>';
-                        }
-                        else
-                        {
-                            echo '<p>Pascoal</p>';
-                            echo '<p>Rua da Tamancaria, 24</p>';
-                        }
+                        require_once 'funcoes/db.php';
+
+                        $email = $_SESSION["email"];
+
+                        $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+
+                        $result = $link->query($sql);
+                        $row = $result->fetch();
+
+                        echo $row["morada_envio"];
                         ?>
-                    <a class="btn btn-danger" style="border-radius: 0px; width: 200px;" href="">EDITAR</a>
+                    </p>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEnvio">
+                        Editar
+                    </button>
+                </div>
+                <div class="modal" id="modalEnvio">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar dados</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="floatingInput">Nova morada de envio</label>
+                                    <input name="morada_envio" type="text" required class="form-control" id="floatingInput" placeholder="Nova morada">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="container p">
                     <h1 class="fs-3 fw-light">MORADA DE COBRANÇA POR DEFEITO</h1>
-                    <?php
-                        error_reporting(0);
+                    <p>
+                        <?php
+                        require_once 'funcoes/db.php';
 
-                        if($_SESSION["TIPO_CONTA"] == "admin")
-                        {
-                            echo '<p>Quinta da Carreira</p>';
-                            echo '<p>Rua rainha santa isabel LT 52 RCH ESQ</p>';
-                        }
-                        else
-                        {
-                            echo '<p>Pascoal</p>';
-                            echo '<p>Rua da Tamancaria, 24</p>';
-                        }
-                    ?>
-                    <a class="btn btn-danger" style="border-radius: 0px; width: 200px;" href="">EDITAR</a>
+                        $email = $_SESSION["email"];
+
+                        $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+
+                        $result = $link->query($sql);
+                        $row = $result->fetch();
+
+                        echo $row["morada_cobranca"];
+                        ?>
+                    </p>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCobranca">
+                        Editar
+                    </button>
+                </div>
+                <div class="modal" id="modalCobranca">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar dados</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="floatingInput">Nova morada de cobrança</label>
+                                    <input name="morada_cobranca" type="text" required class="form-control" id="floatingInput" placeholder="Nova morada">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,8 +296,7 @@ if($_SESSION["LOGADO"] == "false")
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2"><a href="galeria.php" class="nav-link p-0 text-white">Galeria</a>
                             </li>
-                            <li class="nav-item mb-2"><a href="encomendar.php"
-                                    class="nav-link p-0 text-white">Encomendar</a>
+                            <li class="nav-item mb-2"><a href="encomendar.php" class="nav-link p-0 text-white">Encomendar</a>
                             </li>
                             <li class="nav-item mb-2"><a href="ajuda.php" class="nav-link p-0 text-white">Ajuda</a></li>
                         </ul>
@@ -194,8 +306,7 @@ if($_SESSION["LOGADO"] == "false")
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">(+351 961442777))</a>
                             </li>
-                            <li class="nav-item mb-2"><a href="#"
-                                    class="nav-link p-0 text-white">coisascombolo@gmail.com</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">coisascombolo@gmail.com</a></li>
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Messenger</a></li>
                         </ul>
                     </div>
@@ -207,9 +318,7 @@ if($_SESSION["LOGADO"] == "false")
                     </div>
                     <div class="col-4 offset-1">
                         <h2>Venha nos visitar!</h2>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.341241639568!2d-7.933954784341394!3d40.68848164699045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2348272b934bd5%3A0xa9ac82cb7b392147!2sLargo%20Rossio%2C%20Viseu!5e0!3m2!1spt-PT!2spt!4v1641941380433!5m2!1spt-PT!2spt"
-                            width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.341241639568!2d-7.933954784341394!3d40.68848164699045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2348272b934bd5%3A0xa9ac82cb7b392147!2sLargo%20Rossio%2C%20Viseu!5e0!3m2!1spt-PT!2spt!4v1641941380433!5m2!1spt-PT!2spt" width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </footer>

@@ -21,9 +21,24 @@ if($_SESSION["LOGADO"] == "false")
     <link rel="icon" href="./imagens/aleatorias/logotipo.png">
     <title>Mãos na Massa - Perfil</title>
 </head>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+            width: 10px;
+        }
 
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #c92b4d;
+        }
+</style>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
             <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -37,7 +52,7 @@ if($_SESSION["LOGADO"] == "false")
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-light shadow align-middle">
+<nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
         <div class="container">
             <a href="index.php" class="navbar-brand">
                 <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2"
@@ -50,6 +65,7 @@ if($_SESSION["LOGADO"] == "false")
             <div id="navbarSupportedContent" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto align-middle">
                     <li class="nav-item"><a href="galeria.php" class="nav-link text-danger">Galeria</a></li>
+                    <li class="nav-item"><a href="pastelaria.php" class="nav-link text-danger">Pastelaria</a></li>
                     <?php
                     error_reporting(0);
         
@@ -59,10 +75,6 @@ if($_SESSION["LOGADO"] == "false")
                         if($_SESSION["TIPO_CONTA"] == "admin")
                         {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {
                               echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
@@ -71,17 +83,12 @@ if($_SESSION["LOGADO"] == "false")
                         }
                         else
                         {
-                            echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center flex-nowrap ms-auto">
-                            <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
-                            <img href="perfil.php" src="./imagens/profilepics/utilizador.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-                            </ul>';
                             if($_SESSION["ENCOMENDA_ATIVA"] == true)
                             {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                                 </body>';
                             }
                         }
-                        echo '<li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>';
                     }
                     else
                     {
@@ -89,6 +96,17 @@ if($_SESSION["LOGADO"] == "false")
                     }
                     ?>
                 </ul>
+            </div>
+            <div class="containe text-end">
+                <?php
+                if ($_SESSION["LOGADO"] == "true") {
+                    echo '<ul class="text-right nav navbar-nav flex-row justify-content-md-center justify-content-end flex-nowrap ms-auto">
+                    <li class="nav-item align-end"><a href="perfil.php" class="nav-link text-danger">' . $_SESSION["email"] . '</a></li>
+                    <img src="./imagens/profilepics/admin.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <li class="nav-item"><a href="./funcoes/logout.php" class="nav-link text-danger">Sair</a></li>
+                    </ul>';
+                }
+                ?>
             </div>
         </div>
     </nav>
@@ -99,22 +117,12 @@ if($_SESSION["LOGADO"] == "false")
         <div class="row">
             <div class="col-3 text-start">
                 <div class="container">
-                    <?php
+                <?php
                     error_reporting(0);
-        
-                    if($_SESSION["LOGADO"] == "true")
-                    {
-                        if($_SESSION["TIPO_CONTA"] == "admin")
-                        {
-                            
-                            echo '<a href="#" class="nav-link fw-light fs-3 text-black">' . $_SESSION["email"] . '</a>';
 
-                        }
-                        else
-                        {
-                            echo '<a href="#" class="nav-link fw-light fs-3 text-black">' . $_SESSION["email"] . '</a>';
-                        }
-                        echo '<a class="text-black" href="../funcoes/logout.php">Logout</a>';
+                    if ($_SESSION["LOGADO"] == "true") {
+                        echo '<a href="#" class="nav-link fw-light fs-6 text-black">' . $_SESSION["email"] . '</a>';
+                        echo '<a class="text-black" href="./funcoes/logout.php">Logout</a>';
                     }
                     ?>
                     <div class="list-group text-start my-5">
@@ -130,58 +138,64 @@ if($_SESSION["LOGADO"] == "false")
                 </div>
             </div>
             <div class="col">
-            <h2>Encomendas</h2>
-        <p>Dados disponíveis</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID da encomenda</th>
-                    <th>Detalhes</th>
-                    <th>Tipo de massa</th>
-                    <th>Quantia</th>
-                    <th>Data</th>
-                    <th>Preço</th>
-                    <th>Morada de envio</th>
-                    <th>Tipo de pagamento</th>
-                    <th>Estado da encomenda</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>123124</td>
-                    <td>jiawdjio awjioijoaw jiodajiow diojajiow djoipajiowp ijoawdijo aijo</td>
-                    <td>chocolate</td>
-                    <td>1</td>
-                    <td>09-01-2022</td>
-                    <th>30€</th>
-                    <th>Pascoal, Rua da tamancaria, 42</th>
-                    <th>Cartão de crédito</th>
-                    <th>Terminada</th>
-                </tr>
-                <tr>
-                    <td>325123</td>
-                    <td>Boj0awdji aijowjioawjio djioawdij ijawdij oawijod</td>
-                    <td>chocolate</td>
-                    <td>1</td>
-                    <td>09-01-2022</td>
-                    <th>30€</th>
-                    <th>Pascoal, Rua da tamancaria, 42</th>
-                    <th>Cartão de crédito</th>
-                    <th>Terminada</th>
-                </tr>
-                <tr>
-                    <td>235125</td>
-                    <td>iawdioawoijd ioajwdiojawidojaijow djioaiojwdjioaw</td>
-                    <td>chocolate</td>
-                    <td>1</td>
-                    <td>09-01-2022</td>
-                    <th>30€</th>
-                    <th>Pascoal, Rua da tamancaria, 42</th>
-                    <th>Cartão de crédito</th>
-                    <th>Terminada</th>
-                </tr>
-            </tbody>
-        </table>
+        <div class="container mt-3">
+        <h2>Encomendas</h2>
+                <?php
+
+                require_once 'funcoes/db.php'; 
+                
+                $email = $_SESSION["email"];
+                $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+
+                $result = $link->query($sql);
+                $row = $result->fetch();
+
+                $id = $row["id"];
+                unset($sql);    
+                $sql = "SELECT * FROM encomendas WHERE id_cliente='$id'";
+                $result = $link->query($sql);
+                if ($result->rowCount() <= 0) {
+                    echo "Não tem encomendas ativas";
+                }
+                else
+                {
+                    foreach ($result as $row) {
+                        echo "        <p>Dados disponíveis</p>
+                        <table class='table table-warning'>
+                            <thead>
+                                <tr>
+                                    <th>id do encomenda</th>
+                                    <th>id do cliente</th>
+                                    <th>Detalhes</th>
+                                    <th>Tipo de massa</th>
+                                    <th>Tipo de recheio</th>
+                                    <th>Tipo de bolo</th>
+                                    <th>Data</th>
+                                    <th>Preço</th>
+                                    <th>Morada de envio</th>
+                                    <th>Estado da encomenda</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                        echo "<tr>";
+                        echo "<td>" . $row["id_encomenda"] . "</td>";
+                        echo "<td>" . $row["id_cliente"] . "</td>";
+                        echo "<td>" . $row["detalhes"] . "</td>";
+                        echo "<td>" . $row["tipo_massa"] . "</td>";
+                        echo "<td>" . $row["tipo_recheio"] . "</td>";
+                        echo "<td>" . $row["tipo_bolo"] . "</td>";
+                        echo "<td>" . $row["data_compra"] . "</td>";
+                        echo "<td>" . $row["preco"] . "</td>";
+                        echo "<td>" . $row["morada_envio"] . "</td>";
+                        echo "<td>" . $row["estado_encomenda"] . "</td>";
+                        echo "</tr>";
+                        echo "
+                        </tbody>
+                    </table>";
+                    }
+                }
+                ?>
+    </div>
             </div>
         </div>
     </div>

@@ -1,47 +1,52 @@
 <?php
-
 session_start();
-/*
-CONTAS DISPONÍVEIS:
+require_once 'db.php';
 
-admin -> admin@gmail.com - admin123
-utilizador -> utilizador@gmail.com - utilizador123
+$utilizadores = [
+    "admin@gmail.com" => "admin123",
+    "utilizador@gmail.com" => "utilizador123"
+];
 
-*/
+$email = $_POST["email"];
+$sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+$result = $link->query($sql);
 
-function verificarEmail($utilizadores){
-    $utilizadores = [
-        "admin@gmail.com" => "admin123",
-        "utilizador@gmail.com" => "utilizador123"
-    ];
-    if(isset($_POST["email"]) && !isset($_SESSION["email"])){
-        if($utilizadores[$_POST["email"]] == $_POST["password"]){
-    
-            return false;
+if ($result = $link->query($sql)) {
+    //Encontrou a conta
+    if ($result->rowCount() > 0) {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+
+        $dadosConta = "SELECT * FROM utilizadores WHERE password='$password' and email='$email'";
+
+        if ($result = $link->query($dadosConta)) {
+            if ($result->rowCount() > 0) {
+                $row = $result->fetch();
+                if($row['tipoconta'] == 0){
+                    header('location:../index.php');
+                    $_SESSION["TIPO_CONTA"] = "utilizador";
+                    $_SESSION["LOGADO"] = "true";
+                    $_SESSION["email"] = $email;
+                }
+                else {
+                    header('location:../index.php');
+                    $_SESSION["TIPO_CONTA"] = "admin";
+                    $_SESSION["LOGADO"] = "true";
+                    $_SESSION["email"] = $email;
+                }
+            }
         }
-    
-        if(!isset($_SESSION["email"]))
-        {
-            return true;
+        else {
+            header("Location: ../login.php?err=true");
         }
     }
+    else{
+        header("Location: ../login.php?err=true");
+    }
 }
-
-if(verificarEmail($_POST["email"]) == true){
+else {
     header("Location: ../login.php?err=true");
-}else{
-    $_SESSION["email"] = $_POST["email"];
-    if(isset($_SESSION["email"])){
-        if($_SESSION["email"] == "admin@gmail.com"){
-            header('location:../dashboard.php');
-            $_SESSION["TIPO_CONTA"] = "admin";
-            $_SESSION["LOGADO"] = "true";
-        }
-        else if($_SESSION["email"] == "utilizador@gmail.com"){
-            header('location:../index.php');
-            $_SESSION["TIPO_CONTA"] = "utilizador";
-            $_SESSION["LOGADO"] = "true";
-        }
-    }
 }
+
+unset($link);
 ?>

@@ -1,15 +1,7 @@
 <?php
-
 session_start();
-
-error_reporting(0);
-
-if($_SESSION["LOGADO"] == "true")
-{
-    header("Location: index.php");
-}
-
 ?>
+<!DOCTYPE html>
 <html lang="pt">
 
 <head>
@@ -18,7 +10,7 @@ if($_SESSION["LOGADO"] == "true")
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="icon" href="./imagens/Logotipo.png">
-    <title>Mãos na massa - Login</title>
+    <title>Mãos na massa - Pastelaria</title>
 </head>
 <style>
     /* width */
@@ -37,11 +29,9 @@ if($_SESSION["LOGADO"] == "true")
         }
 </style>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
-            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
 
             <div id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
@@ -51,46 +41,35 @@ if($_SESSION["LOGADO"] == "true")
             </div>
         </div>
     </nav>
-<nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
+    <nav class="navbar navbar-expand-lg py-3 navbar-dark shadow align-middle" style="background-image: url('./imagens/aleatorias/teste.png'); background-size: cover;">
         <div class="container">
             <a href="index.php" class="navbar-brand">
-                <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2"
-                    style="width: 100px;">
+                <img src="./imagens/aleatorias/logotipo.png" width="45" alt="" class="d-inline-block align-middle mr-2" style="width: 100px;">
             </a>
 
-            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
             <div id="navbarSupportedContent" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto align-middle">
                     <li class="nav-item"><a href="galeria.php" class="nav-link text-danger">Galeria</a></li>
                     <li class="nav-item"><a href="pastelaria.php" class="nav-link text-danger">Pastelaria</a></li>
                     <?php
                     error_reporting(0);
-        
-                    if($_SESSION["LOGADO"] == "true")
-                    {
+
+                    if ($_SESSION["LOGADO"] == "true") {
                         echo '<li class="nav-item"><a href="encomendar.php" class="nav-link text-danger mr-5">Encomendar</a></li>';
-                        if($_SESSION["TIPO_CONTA"] == "admin")
-                        {
+                        if ($_SESSION["TIPO_CONTA"] == "admin") {
                             echo '<li class="nav-item"><a href="dashboard.php" class="nav-link text-danger">dashboard</a></li>';
-                            if($_SESSION["ENCOMENDA_ATIVA"] == true)
-                            {
-                              echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
+                            if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
+                                echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                               </body>';
                             }
-                        }
-                        else
-                        {
-                            if($_SESSION["ENCOMENDA_ATIVA"] == true)
-                            {
+                        } else {
+                            if ($_SESSION["ENCOMENDA_ATIVA"] == true) {
                                 echo '<li class="nav-item mx-2"><a href="checkout.php" class="nav-link text-white fw-bold bg-danger" style="border-radius: 15px;"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
                                 </body>';
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         echo '<li class="nav-item"><a href="login.php" class="nav-link text-danger">Entrar/Registrar</a></li>';
                     }
                     ?>
@@ -109,37 +88,67 @@ if($_SESSION["LOGADO"] == "true")
             </div>
         </div>
     </nav>
-    <div class="container p-5">
-        <main class="form-signin">
-            <form class="mx-auto" style="width: 30%;" action="./funcoes/validarLogin.php" method="post">
-                <?php 
-                if (isset($_GET['err'])) { 
-                ?>
-                <div class="alert alert-danger text-center"><?php echo "Login falhou!";?>
-                </div>
-                <?php
-                } 
-                ?>
-                <div class="container text-center">
-                    <img class="mb-4" src="./imagens/aleatorias/logotipo.png" alt="" width="102" height="auto">
-                </div>
-                <h1 class="h3 mb-3 fw-normal">Bem-vindo</h1>
-
-                <div class="form-floating">
-                    <input name="email" type="email" required class="form-control" id="floatingInput"
-                        placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
-                </div>
-                <div class="form-floating">
-                    <input name="password" type="password" required class="form-control my-2" id="floatingPassword"
-                        placeholder="Password">
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <p>Novo por aqui? Clique<a href="registar.php" class="text-danger"> aqui</a> para se registar.</p>
-                <button class="w-100 btn btn-lg btn-danger" type="submit">Entrar</button>
-            </form>
-        </main>
+    <div class="a text-center mb-4" style="background-image: url('./imagens/aleatorias/background.jpg'); height: 300px;">
+        <div class="container text-center" style="width: 700px; padding-top: 90px;"></div>
+        <h2 class="fw-bold text-white" style="font-size: 70px;">Pastelaria</h2>
+        <p class="fw-light text-white fs-2">Produtos</p>
     </div>
+
+    <div class="produtos">
+        <div class="container p-5">
+            <?php
+            
+
+
+            ?>
+            <div class="container text-center">
+                <h2>Os destaques da semana</h2>
+            </div>
+            <div class="row">
+                <div class="col text-center p-2">
+                    <img src="imagens/pastelaria/pao.jpg" width="150px" alt="">
+                    <h1 class="fw-bold fs-5">Bola Rústica 90g</h1>
+                    <p>5,00€</p>
+                    <p>0,25€/unidade</p>
+                    <p>pacote 20 un</p>
+                    <button class="btn btn-danger text-white fw-bold">Detalhes</button>
+                </div>
+                <div class="col text-center p-2">
+                    <img src="imagens/pastelaria/folhado.jpg" width="150px" alt="">
+                    <h1 class="fw-bold fs-5">Folhado de Frango</h1>
+                    <p>5,76€</p>
+                    <p>0,96€/unidade</p>
+                    <p>pacote 6 un</p>
+                    <button class="btn btn-danger text-white fw-bold">Detalhes</button>
+                </div>
+                <div class="col text-center p-2">
+                    <img src="imagens/pastelaria/folhadomisto.jpg" width="150px" alt="">
+                    <h1 class="fw-bold fs-5">Folhado Misto</h1>
+                    <p>14,40€</p>
+                    <p>0,90€/unidade</p>
+                    <p>pacote 16 un</p>
+                    <button class="btn btn-danger text-white fw-bold">Detalhes</button>
+                </div>
+                <div class="col text-center p-2">
+                    <img src="imagens/pastelaria/croissant.jpg" width="150px" alt="">
+                    <h1 class="fw-bold fs-5">Croissant Chocolate</h1>
+                    <p>18,40€</p>
+                    <p>0,80€/unidade</p>
+                    <p>pacote 23 un</p>
+                    <button class="btn btn-danger text-white fw-bold">Detalhes</button>
+                </div>
+                <div class="col text-center p-2">
+                    <img src="imagens/pastelaria/pastelnata.jpg" width="150px" alt="">
+                    <h1 class="fw-bold fs-5">Pastel de Nata</h1>
+                    <p>4,19€</p>
+                    <p>0,70€/unidade</p>
+                    <p>pacote 6 un</p>
+                    <button class="btn btn-danger text-white fw-bold">Detalhes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="a" style="background-color: #910037; color: #FFFFFF">
         <div class="container">
             <footer class="py-5">
@@ -160,8 +169,7 @@ if($_SESSION["LOGADO"] == "true")
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">(+351 961442777))</a>
                             </li>
-                            <li class="nav-item mb-2"><a href="#"
-                                    class="nav-link p-0 text-white">coisascombolo@gmail.com</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">coisascombolo@gmail.com</a></li>
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Messenger</a></li>
                         </ul>
                     </div>
@@ -173,14 +181,13 @@ if($_SESSION["LOGADO"] == "true")
                     </div>
                     <div class="col-4 offset-1">
                         <h2>Venha nos visitar!</h2>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.341241639568!2d-7.933954784341394!3d40.68848164699045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2348272b934bd5%3A0xa9ac82cb7b392147!2sLargo%20Rossio%2C%20Viseu!5e0!3m2!1spt-PT!2spt!4v1641941380433!5m2!1spt-PT!2spt"
-                            width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.341241639568!2d-7.933954784341394!3d40.68848164699045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2348272b934bd5%3A0xa9ac82cb7b392147!2sLargo%20Rossio%2C%20Viseu!5e0!3m2!1spt-PT!2spt!4v1641941380433!5m2!1spt-PT!2spt" width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </footer>
         </div>
     </div>
+    <script src="https://kit.fontawesome.com/52c6714f28.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
