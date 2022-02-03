@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $img_name = $row["profile_pic_img"];
 
                     //echo $row["profile_pic_img"];
-                    echo '<img src="imagens/profilepics/'. $img_name .'" alt="" style="width: 200px">';
+                    echo '<img src="imagens/profilepics/'. $img_name .'" alt="" style="width: 200px; height: 200px; background-size: cover;">';
                     //echo "<img src='imagens/profilepics/teste.jpg' width='150px' alt=''>";
                     ?>
                     <?php
@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php
                         }
                         ?>
-                        <h2>Atualizar imagem de perfil</h2>
+                        <p>Atualizar imagem de perfil</p>
                         <form action="./funcoes/uploadimgsperfil.php" method="post" enctype="multipart/form-data">
                             Selecione uma imagem:
                             <input class="form-control" type="file" name="fileToUpload" id="fileToUpload" style="width: 600px;" required>

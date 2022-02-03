@@ -13,6 +13,35 @@ if ($logado != 'true' && $tipoCONTA != 'admin') {
 if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utilizador') {
     header('Location: index.php');
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_mensagem = $_GET['id'];
+    $tipo = $_GET['tipo'];
+    $email = $_SESSION["email"];
+    $resposta = $_POST["resposta"];
+
+    if ($tipo == 1) {
+        # alterar estado encomenda
+    }
+    else if ($tipo == 2) {
+        # responder
+
+        # temos de alterar o estado na tabela mensagens_ajuda para respondida
+        # adicionar a resposta na tabela mensagens_resposta
+
+        try {
+            $sql = "UPDATE mensagens_ajuda SET estado = 1 WHERE id_mensagem = $id";
+
+            $result = $link->exec($sql);
+            unset($sql);
+
+            $sql = "INSERT INTO mensagens_resposta(id_mensagem, resposta) VALUES($id, '$resposta')";
+            $result = $link->exec($sql);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -24,8 +53,9 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="icon" href="./imagens/Logotipo.png">
     <script src="./css/bootstrap.bundle.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <title> Mãos na massa - Encomendar</title>
+    <title> Mãos na massa - Dashboard</title>
 </head>
 <style>
     /* width */
@@ -43,7 +73,17 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
         background: #c92b4d;
     }
 </style>
-
+<?php
+if(isset($_GET['id'])) {
+?>
+<script>
+    $(document).ready(function(){
+        $("#modalResponder").modal('show');
+    });
+</script>
+<?php
+}
+?>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow" style="font-size: 13px;">
         <div class="container">
@@ -214,6 +254,7 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
                     <th>Data envio</th>
                     <th>Nome</th>
                     <th>Estado</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,6 +264,7 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
 
                 $sql = "SELECT * FROM mensagens_ajuda";
                 foreach ($link->query($sql) as $row) {
+                    $id = $row["id_mensagem"];
                     echo "<tr>";
                     echo "<td>" . $row["id_mensagem"] . "</td>";
                     echo "<td>" . $row["email_cliente"] . "</td>";
@@ -230,11 +272,37 @@ if ($_SESSION["TIPO_CONTA"] == 'visitante' || $_SESSION["TIPO_CONTA"] == 'utiliz
                     echo "<td>" . $row["data_envio"] . "</td>";
                     echo "<td>" . $row["nome"] . "</td>";
                     echo "<td>" . $row["estado"] . "</td>";
+                    echo "<td><button type='button' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#modalResponder'><a href='dashboard.php?id=$id?tipo=2'>Responder</a></button></td>";
                     echo "</tr>";
                 }
                 ?>
             </tbody>
         </table>
+    </div>
+    <div class="modal" id="modalResponder">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Responder mensagem</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Estado</p>
+                        <select name="ESTADO_ENCOMENDA" class="col-sm-3 mb-3 text-black form-select">
+                            <option value="1">Por processar</option>
+                            <option value="2">Em processamento</option>
+                             <option value="3">Em entrega</option>
+                            <option value="4">Entregue</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="container my-3 fw-bold">
         <h2>Dados</h2>
