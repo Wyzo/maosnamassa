@@ -1,7 +1,7 @@
 <?php
-session_start();
-
-require_once './funcoes/db.php';
+$titulo = "Maos na massa - Galeria";
+require_once 'funcoes/navbar.php';
+require_once 'funcoes/carrinho.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
