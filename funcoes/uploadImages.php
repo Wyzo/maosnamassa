@@ -31,12 +31,12 @@ if($imageFileType != "png") {
 }
 
 if ($uploadOk == 0) {
-    header("Location: ../dashboard.php?err=true");
+    header("Location: ../dashboard?err=true");
 } else {
   if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    header("Location: ../dashboard.php");
+    header("Location: ../dashboard");
   } else {
-    header("Location: ../dashboard.php?err=true");
+    header("Location: ../dashboard?err=true");
   }
 }
 ?>

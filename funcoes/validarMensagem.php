@@ -23,13 +23,13 @@ if (validaDados($email, $telefone, $nome, $mensagem) == true) {
     VALUES ('$email', '$telefone', '$mensagem', '$nome')";
     if ($link->exec($sql)) {
         //Código executado com sucesso!
-        header("Location: ../submit.php");
+        header("Location: ../submit");
     }else {
-        header("Location: ajuda.php?err=true");
+        header("Location: ajuda?err=true");
     }
 }
 else {
-    header("Location: ajuda.php?err=true");
+    header("Location: ajuda?err=true");
 }
 
 unset($link);

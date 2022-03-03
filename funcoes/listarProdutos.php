@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once 'db.php';
 
 $email = $_SESSION["email"];
+require_once 'funcoes/carrinho';
 
 $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
 $result = $link->query($sql);

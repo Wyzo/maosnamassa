@@ -10,6 +10,6 @@ unset ($_SESSION["tipoMASSA"]);
 unset ($_SESSION["tipoRECHEIO"]);
 unset ($_SESSION["DETALHES"]);
 
-header("Location: ../index.php");
+header("Location: ../index");
 
 ?>

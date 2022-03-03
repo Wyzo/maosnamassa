@@ -29,7 +29,7 @@ if ($_FILES["fileToUpload"]["size"] > 5 * MB) {
 }
 
 if ($uploadOk == 0) {
-    header("Location: ../perfil.php?err=true");
+    header("Location: ../perfil?err=true");
 } else {
   if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file))
     {
@@ -48,10 +48,10 @@ if ($uploadOk == 0) {
 
         $sql = "UPDATE Utilizadores SET profile_pic_img = '$nomet' WHERE email ='$email'";
         $result = $link->exec($sql);
-        header("Location: ../perfil.php");
+        header("Location: ../perfil");
 
   } else {
-    header("Location: ../perfil.php?err=true");
+    header("Location: ../perfil?err=true");
   }
 }
 ?>

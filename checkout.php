@@ -2,10 +2,9 @@
 
 $titulo = "Maos na massa - Checkout";
 require_once 'funcoes/navbar.php';
-require_once 'funcoes/carrinho.php';
 
 if ($_SESSION["ENCOMENDA_ATIVA"] == false) {
-    header("Location: index.php");
+    header("Location: index");
 }
 
 
@@ -129,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION["PAGO"] = true;
             unset($_SESSION["ENCOMENDA_ATIVA"]);
             $_SESSION["ENCOMENDA_ATIVA"] = false;
-            header('location: encomendavalida.php');
+            header('location: encomendavalida');
         }
     } else {
-        header('location: checkout.php?err=true');
+        header('location: checkout?err=true');
     }
 }
 
@@ -156,99 +155,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span>Detalhes do seu pedido!</span>
                     </h4>
-                    <ul class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0">Tipo de bolo</h6>
-                                <small class="text-muted" id="tipo_bolo">
-                                    <?php
-                                    session_start();
+                    <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>nome</th>
+                                    <th>preco</th>
+                                    <th>data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                session_start();
+                                require_once 'funcoes/db.php';
+                                error_reporting(1);
 
-                                    $idBolo = $_SESSION["tipoBOLO"];
-                                    switch ($idBolo) {
-                                        case 1:
-                                            echo '<p>Bolo de Aniversário</p>';
-                                            break;
-                                        case 2:
-                                            echo '<p>Bolo de Primeira comunhão</p>';
-                                            break;
-                                        case 3:
-                                            echo '<p>Bolo de Casamento</p>';
+                               if (isset($_SESSION["email"])) {
+                                $email = $_SESSION["email"];
+
+                                $sql = "SELECT * FROM utilizadores WHERE email = '$email'";
+                                $result = $link->query($sql);
+                                $row = $result->fetch();
+                                $id = $row["id"];
+
+
+                                $sql = "SELECT * FROM carrinho WHERE id_utilizador = $id";
+                                $result = $link->query($sql);
+                                $row = $result->fetch();
+                                $idcarrinho = $row["id"];
+
+                                $sql = "SELECT * FROM carrinho_compras WHERE id_carrinho = $idcarrinho";
+                                $result = $link->query($sql);
+                                $totalapagar;
+
+                                if ($result->rowCount() > 0) {
+                                    foreach ($link->query($sql) as $row2) {
+                                        $imgNome = $row2["img_nome"];
+                                        $idproduto = $row2["id_produto"];
+
+                                        $sql = "SELECT * FROM produtos WHERE id = $idproduto";
+                                        $result = $link->query($sql);
+                                        $row = $result->fetch();
+                                        $totalapagar += $row["preco"];
+
+                                        echo "<tr>";
+                                        echo "<td>" . $row["id"] . "</td>";
+                                        echo "<td>" . $row["nome"] . "</td>";
+                                        echo "<td>" . $row["preco"] . "€</td>";
+                                        echo "<td>" . $row2["data"] . "</td>";
+                                        echo "<td><a class='btn btn-danger' href='./funcoes/remover?id=". $row['id'] ."'>Remover</a></td>";
+                                        echo "</tr>";
                                     }
-                                    ?>
-                                </small>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0">Tipo de massa</h6>
-                                <small class="text-muted" id="tipo_massa">
-                                    <?php
-                                    session_start();
-
-                                    $idBolo = $_SESSION["tipoMASSA"];
-                                    switch ($idBolo) {
-                                        case 1:
-                                            echo '<p>Pão de ló</p>';
-                                            break;
-                                        case 2:
-                                            echo '<p>Caramelo</p>';
-                                            break;
-                                        case 3:
-                                            echo '<p>Cenoura</p>';
-                                        case 4:
-                                            echo '<p>Chocolate</p>';
-                                        case 5:
-                                            echo '<p>Iogurte</p>';
-                                    }
-                                    ?>
-                                </small>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0">Tipo de recheio</h6>
-                                <small class="text-muted" id="tipo_recheio">
-                                    <?php
-                                    session_start();
-
-                                    $idBolo = $_SESSION["tipoRECHEIO"];
-                                    switch ($idBolo) {
-                                        case 1:
-                                            echo '<p>Brigadeiro</p>';
-                                            break;
-                                        case 2:
-                                            echo '<p>Doce d ovo</p>';
-                                            break;
-                                        case 3:
-                                            echo '<p>Brigadeiro de caramelo</p>';
-                                        case 4:
-                                            echo '<p>Creme russo</p>';
-                                        case 5:
-                                            echo '<p>Frutos vermelhos</p>';
-                                    }
-                                    ?>
-                                </small>
-                            </div>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0">Detalhes</h6>
-                                <small class="text-muted" id="tipo_recheio">
-                                    <?php
-                                    session_start();
-                                    echo '<div>' . $_SESSION["DETALHES"] . '<div/>';
-                                    ?>
-                                </small>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total</span>
-                            <strong>35€</strong>
-                        </li>
-                    </ul>
-                    <form class="card p-2" method="post" action="./funcoes/cancelarEncomenda.php">
+                                }
+                                echo "<p>Total a pagar:<bold> " . $totalapagar . "€</bold></p>";
+                               }
+                                ?>
+                            </tbody>
+                        </table>
+                    <form class="card p-2" method="post" action="./funcoes/cancelarEncomenda">
                         <div class="input-group">
                             <button type="submit" class="btn btn-secondary">Cancelar encomenda</button>
                         </div>
@@ -319,44 +283,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-    <div class="a" style="background-color: #910037; color: #FFFFFF">
-        <div class="container">
-            <footer class="py-5">
-                <div class="row">
-
-                    <div class="col-2">
-                        <h5>Acesso Rápido</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item mb-2"><a href="galeria.php" class="nav-link p-0 text-white">Galeria</a>
-                            </li>
-                            <li class="nav-item mb-2"><a href="encomendar.php" class="nav-link p-0 text-white">Encomendar</a>
-                            </li>
-                            <li class="nav-item mb-2"><a href="ajuda.php" class="nav-link p-0 text-white">Ajuda</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-2">
-                        <h5>Apoio ao cliente</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">(+351 961442777))</a>
-                            </li>
-                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">coisascombolo@gmail.com</a></li>
-                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Messenger</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-2">
-                        <h5>Quem somos</h5>
-                        <ul class="nav flex-column">
-                            <p>Somos uma empresa de confeitaria tradicional portuguesa, de cake disign.</p>
-                        </ul>
-                    </div>
-                    <div class="col-4 offset-1">
-                        <h2>Venha nos visitar!</h2>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.341241639568!2d-7.933954784341394!3d40.68848164699045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2348272b934bd5%3A0xa9ac82cb7b392147!2sLargo%20Rossio%2C%20Viseu!5e0!3m2!1spt-PT!2spt!4v1641941380433!5m2!1spt-PT!2spt" width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
+    <?php
+    include_once './funcoes/footer.php';
+    ?>
 </body>
 
 </html>

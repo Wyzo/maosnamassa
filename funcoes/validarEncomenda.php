@@ -9,13 +9,13 @@ $_SESSION["DETALHES"] = filter_input(INPUT_POST, 'DETALHES', FILTER_SANITIZE_STR
 
 if(empty($_SESSION["DETALHES"]))
 {
-    header("Location: ../encomendar.php?err=true");
+    header("Location: ../encomendar?err=true");
 }
 else
 {
     $_SESSION["ENCOMENDA_ATIVA"] = true;
     $_SESSION["PAGO"] = false;
-    header('location:../checkout.php');
+    header('location:../checkout');
 }
 
 
